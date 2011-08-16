@@ -5,6 +5,7 @@ require 'net/http'
 #require 'net/https'
 require 'json'
 
+
 get '/' do
   headers = params['h'] ? JSON.parse(params['h']) : {}
   url = URI.parse(params['u'])
@@ -35,6 +36,6 @@ get '/' do
     http.request(request)
   end
 
-  arg = "{ status: #{response.code}, headers: [#{response.each_name { }.to_json}], body: '#{response.body}' }"
+  arg = "{ status: #{response.code}, headers: [#{response.each_name { }.to_json}], body: \"#{URI.escape(response.body)}\" }"
   json = "#{params['jsonp']}(#{arg});"
 end
