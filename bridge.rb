@@ -30,7 +30,7 @@ get '/' do
   request.body = params['b'] if params['b']
 
   http = Net::HTTP.new(url.host, url.port)
-  http.use_ssl = false
+  #http.use_ssl = false
   response = http.start do |http|
     http.request(request)
   end
