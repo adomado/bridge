@@ -9,19 +9,20 @@ require 'json'
 get '/' do
   headers = params['h'] ? JSON.parse(params['h']) : {}
   url = URI.parse(params['u'])
+  path = url.path == "" ? "/" : url.path
 
   if params['m'] == 'get'
-    request = Net::HTTP::Get.new(url.path)
+    request = Net::HTTP::Get.new(path)
   elsif params['m'] == 'post'
-    request = Net::HTTP::Post.new(url.path)
+    request = Net::HTTP::Post.new(path)
   elsif params['m'] == 'put'
-    request = Net::HTTP::Put.new(url.path)
+    request = Net::HTTP::Put.new(path)
   elsif params['m'] == 'delete'
-    request = Net::HTTP::Delete.new(url.path)
+    request = Net::HTTP::Delete.new(path)
   elsif params['m'] == 'head'
-    request = Net::HTTP::Head.new(url.path)
+    request = Net::HTTP::Head.new(path)
   else
-    request = Net::HTTP::Get.new(url.path)
+    request = Net::HTTP::Get.new(path)
   end
 
   headers.each do |key, value|
