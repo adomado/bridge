@@ -9,7 +9,7 @@ require 'json'
 get '/' do
   headers = params['h'] ? JSON.parse(params['h']) : {}
   url = URI.parse(params['u'])
-  path = url.path == "" ? "/" : url.path
+  path = url.path == "" ? "/" : url.path + "?" + url.query  # required when url.query is present in get request
 
   if params['m'] == 'get'
     request = Net::HTTP::Get.new(path)
