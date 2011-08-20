@@ -2,7 +2,7 @@ require 'rubygems'
 require 'sinatra'
 require "uri"
 require 'net/http'
-#require 'net/https'
+require 'net/https'
 require 'json'
 
 
@@ -32,7 +32,10 @@ get '/' do
   request.body = params['b'] if params['b']
 
   http = Net::HTTP.new(url.host, url.port)
-  #http.use_ssl = false
+
+  # Know when to use https
+  http.use_ssl = true if url.scheme == "https"
+
   response = http.start do |http|
     http.request(request)
   end
