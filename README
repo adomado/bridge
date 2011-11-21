@@ -19,6 +19,8 @@ u => uri
 m => HTTP method (GET, POST, PUT, DELETE, HEAD, etc) default GET
 h => request headers hash in json, url encoded
 b => request body
+c => if "true", server side caching of result will happen for #{cn} minutes
+cn => number of minutes (1, 2, 3, ...) for which server side caching will occur
 
 Callback argument looks like this:
 { status: 200, headers: { header: hash }, body: 'body text' }

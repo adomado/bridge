@@ -4,6 +4,17 @@ require "uri"
 require 'net/http'
 require 'net/https'
 require 'json'
+require 'sinatra/memcache'  # sinatra support => https://github.com/gioext/sinatra-memcache
+require "pp"
+
+
+# Memcached config
+set :cache_server, "localhost:11211"
+set :cache_namespace, "bridge-memcache"
+set :cache_enable, true
+set :cache_logging, true
+set :cache_default_expiry, 60*1   # seconds, default => 1 min
+set :cache_default_compress, true
 
 
 get '/' do
@@ -37,7 +48,17 @@ get '/' do
   http.use_ssl = true if url.scheme == "https"
 
   response = http.start do |http|
-    http.request(request)
+    if params['c'] == "true"
+      pp params
+      cache params['u'], :expiry => (60 * (params['cn']||1.to_i)) do
+        puts "========> cached for #{Time.now}"
+        http.request(request) # uncached request
+      end
+    else
+      puts "========> NOT caching #{Time.now}"
+      http.request(request) # uncached request
+    end
+
   end
 
   arg = "{ status: #{response.code}, headers: [#{response.each_name { }.to_json}], body: \"#{URI.escape(response.body)}\" }"
