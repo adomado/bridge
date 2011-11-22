@@ -5,7 +5,6 @@ require 'net/http'
 require 'net/https'
 require 'json'
 require 'sinatra/memcache'  # sinatra support => https://github.com/gioext/sinatra-memcache
-require "pp"
 
 
 # Memcached config
@@ -49,13 +48,10 @@ get '/' do
 
   response = http.start do |http|
     if params['c'] == "true"
-      pp params
       cache params['u'], :expiry => (60 * (params['cn']||1.to_i)) do
-        puts "========> cached for #{Time.now}"
         http.request(request) # uncached request
       end
     else
-      puts "========> NOT caching #{Time.now}"
       http.request(request) # uncached request
     end
 
