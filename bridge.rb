@@ -48,7 +48,8 @@ get '/' do
 
   response = http.start do |http|
     if params['c'] == "true"
-      cache params['u'], :expiry => (60 * (params['cn']||1.to_i)) do
+      timeout = (params["cn"].to_i == 0 ? 1 : params["cn"].to_i)
+      cache params['u'], :expiry => (60 * timeout) do
         http.request(request) # uncached request
       end
     else
